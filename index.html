@@ -1,0 +1,125 @@
+<div>
+  <input type="number" name="" id="a" placeholder="Balls"/>
+  <input type="number" name="" id="b" value="" placeholder="Gravity"/>
+  <input type="number" name="" id="c" value="" placeholder="Friction"/>
+  <input type="submit" name="" id="" value="ok" onclick="get()"/>
+  <style type="text/css" media="all">
+    body{margin:0;}
+    input{outline:0;border:0;width:70px;margin:5px;}
+  </style>
+  <canvas>
+    
+  </canvas>
+</div>
+<script type="text/javascript" charset="utf-8">
+
+var canvas= document.querySelector("canvas");
+canvas.width= window.innerWidth;
+canvas.height= window.innerHeight;
+iw=window.innerWidth;
+ih=window.innerHeight;
+c= canvas.getContext("2d");
+
+
+
+// control board 
+gravity=.5;
+friction=.97;
+number_of_balls=50;
+ball_array=[];
+color_list=["#0468BF","#049DBF","#C7D93D","#D99E6A","#8C4332"]
+
+function get(){
+  number_of_balls=parseInt(document.querySelector("#a").value);
+  gravity=parseInt(document.querySelector("#b").value);
+  friction=parseInt(document.querySelector("#c").value);
+  init();
+  console.log(gravity+friction);
+  
+};
+function Balls(x ,y ,r,dx,dy,color){
+  this.x=x;
+  this.y=y;
+  this.r=r;
+  this.dx=dx;
+  this.dy=dy;
+  this.color=color;
+  this.update = function(){
+  c.beginPath();
+  c.arc(this.x, this.y, this.r ,0, Math.PI*2);
+  
+  c.fillStyle=this.color;
+  c.fill();
+  this.y+=this.dy;
+  this.x+=this.dx;
+  if(this.x+this.r > iw || this.x-this.r < 0 ){
+    this.dx=-this.dx
+  };
+  if( this.y+this.r>ih || this.y-this.r< 0){
+    this.dy=-this.dy*friction;
+    
+
+ 
+  }else{
+   this.dy+=gravity;
+  };
+    
+  };
+  
+};
+
+function init(){
+  ball_array=[];
+  for(var i=0; i < number_of_balls ; i++){
+    r=range(20,40);
+    x=range(r,iw-r);
+    y=range(r,ih-r-150);
+    console.log(y+"y"+x);
+    dy=range(1,3);
+    dx=range(-5,5);
+    color=colors(color_list);
+    ball_array.push(new Balls(x,y,r,dx,dy,color));
+    
+  }
+  console.log(y);
+  
+};
+
+
+function animate(){
+  requestAnimationFrame(animate);
+  c.clearRect(0,0,iw,ih);
+
+ for (var i=0 ; i< ball_array.length; i++){
+   ball_array[i].update();
+   
+ };
+ 
+
+
+ 
+ 
+};
+
+animate();
+
+function range(start,end){
+  m=Math.random()
+  return Math.round(m*end+start-m*start)
+};
+
+function colors(a){
+  
+ return a[Math.floor(Math.random()*a.length)];
+  
+};
+
+
+
+init();
+
+canvas.addEventListener("click",function(){
+  init();
+  
+});
+</script>
